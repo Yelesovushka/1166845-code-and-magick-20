@@ -27,6 +27,21 @@ var getMaxElement = function (arr) {
   return maxElement;
 };
 
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+var drawHistogramRect = function (ctx, name, coordinateX, score) {
+  ctx.fillStyle = (name === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + getRandomNumber(1, 100) + '%, 50%)';
+  ctx.fillRect(coordinateX, CLOUD_Y + FONT_GAP * 3 + GAP + MAX_HEIGHT, barWidth, -score);
+};
+
+var drawHistogramText = function (ctx, name, time, coordinateX, score) {
+  ctx.fillStyle = '#000';
+  ctx.fillText(name, coordinateX, CLOUD_Y + MAX_HEIGHT + FONT_GAP * 4);
+  ctx.fillText(Math.round(time), coordinateX, CLOUD_Y + FONT_GAP * 3 + (MAX_HEIGHT - score));
+};
+
 window.renderStatistics = function (ctx, players, times) {
   renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
   renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
@@ -42,11 +57,7 @@ window.renderStatistics = function (ctx, players, times) {
     var gapX = CLOUD_X + BIG_GAP + (BIG_GAP + barWidth) * i;
     var points = (MAX_HEIGHT * times[i]) / maxTime;
 
-    ctx.fillStyle = '#000';
-    ctx.fillText(players[i], gapX, CLOUD_Y + MAX_HEIGHT + FONT_GAP * 4);
-    ctx.fillText(Math.round(times[i]), gapX, CLOUD_Y + FONT_GAP * 3 + (MAX_HEIGHT - points));
-
-    ctx.fillStyle = (players[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : 'hsl(240, ' + (Math.floor(Math.random() * 101)) + '%, 50%)';
-    ctx.fillRect(gapX, CLOUD_Y + FONT_GAP * 3 + GAP + MAX_HEIGHT, barWidth, -points);
+    drawHistogramRect(ctx, players[i], gapX, points);
+    drawHistogramText(ctx, players[i], times[i], gapX, points);
   }
 };
